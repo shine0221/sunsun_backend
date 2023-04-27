@@ -17,7 +17,7 @@ type_close = ['親人', '親貓', '']
 type_status = ['可認養', '訓練中']
 
 image_type = ['jpeg', 'bmp', 'png', 'gif', 'jpg']
-
+ 
 
 def identity_check(f):
     @wraps(f)
