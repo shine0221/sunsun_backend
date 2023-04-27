@@ -28,7 +28,7 @@ def identity_check(f):
         return f(*args, **kwargs)
 
     return func
-
+ 
 
 def allowed_file(filename):
     return '.' in filename and \
