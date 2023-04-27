@@ -242,5 +242,5 @@ if __name__ == '__main__':
     app.run(
         debug=True,
         use_reloader=False,
-        port=443
+        port=80
     )
