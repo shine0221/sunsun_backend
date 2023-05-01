@@ -240,8 +240,7 @@ def update_cat():
 
 if __name__ == '__main__':
     app.run(
-        debug=True,
+        debug=False,
         use_reloader=False,
-        port= 443,
         host= '0.0.0.0'
     )
