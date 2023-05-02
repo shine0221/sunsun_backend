@@ -59,7 +59,7 @@ def get_cat():
         for d in df:
             return_data = {}
             return_data['photo'] = d['photo']
-            return_data['photo_album_list'] = d['photo_album'].split(',')
+            return_data['photo_album_list'] = d['photo_album']
             return_data['uid'] = d['_id']
             return_data['name'] = d['name']
             return_data['age'] = d['age']
