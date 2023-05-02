@@ -59,7 +59,7 @@ def get_cat():
         df = dao.get(query_data)
         for d in df:
             return_data = {}
-            return_data['photo'] = './'+ os.path.relpath(d['photo'], 'C:\\Users\\郭璦菁\\OneDrive\\桌面\\cat_backend')
+            return_data['photo'] = './'+ os.path.relpath(d['photo'], 'C:\\Users\\郭璦菁\\OneDrive\\桌面\\cat_backend') if 'C:\\Users\\郭璦菁' in d['photo'] else d['photo']
             return_data['photo'] = return_data['photo'].replace('\\', '/')
             return_data['photo_album_list'] = glob.glob(f'./cat_image_base/{d["_id"]}/photo_album/*')
             for i, photo in enumerate(return_data['photo_album_list']):
