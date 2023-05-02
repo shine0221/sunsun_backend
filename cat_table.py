@@ -4,7 +4,7 @@ import datetime
 class CatTable:
     def __init__(self, name=None, sex_type=None, age=None, des=None, photo=None, age_type=None,
                  close_type=None, status_type=None, personality=None, uid=None, cat_status=None, is_adapted=None,
-                 adapted_date=None):
+                 adapted_date=None, photo_album=None):
         self.name = name
         self.sex_type = sex_type
         self.age = age
@@ -19,6 +19,7 @@ class CatTable:
         self.create_on = datetime.datetime.utcnow()
         self.is_adapted = is_adapted
         self.adapted_date = adapted_date
+        self.photo_album = photo_album
 
     def to_dict(self):
         data = {
@@ -35,6 +36,7 @@ class CatTable:
             "status_type": self.status_type,
             "adapted_date": self.adapted_date,
             "is_adapted": self.is_adapted,
-            "create_on": self.create_on
+            "create_on": self.create_on,
+            "photo_album": self.photo_album
         }
         return data

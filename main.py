@@ -4,7 +4,6 @@ from cat_table import CatTable
 from data_access import MongoDB
 from functools import wraps
 from flask_cors import CORS
-import glob
 import uuid
 import shutil
 import os
@@ -59,11 +58,8 @@ def get_cat():
         df = dao.get(query_data)
         for d in df:
             return_data = {}
-            return_data['photo'] = './'+ os.path.relpath(d['photo'], 'C:\\Users\\郭璦菁\\OneDrive\\桌面\\cat_backend') if 'C:\\Users\\郭璦菁' in d['photo'] else d['photo']
-            return_data['photo'] = return_data['photo'].replace('\\', '/')
-            return_data['photo_album_list'] = glob.glob(f'./cat_image_base/{d["_id"]}/photo_album/*')
-            for i, photo in enumerate(return_data['photo_album_list']):
-                return_data['photo_album_list'][i] = photo.replace('\\', '/')
+            return_data['photo'] = d['photo']
+            return_data['photo_album_list'] = d['photo_album'].split(',')
             return_data['uid'] = d['_id']
             return_data['name'] = d['name']
             return_data['age'] = d['age']
@@ -105,26 +101,25 @@ def create_cat():
         if data.get('sex_type', None) not in type_sex:
             raise Exception(f'invalid sex_type input, expect:{type_sex}')
 
-        image_path = None
-        image = request.files.get('photo', None)
-        if image:
-            if not allowed_file(image.filename):
-                raise Exception(f'invalid file type, expect:{image_type}')
-            if not os.path.exists(f'./cat_image_base/{uid}'):
-                os.mkdir(f'./cat_image_base/{uid}')
-            image_path = f'./cat_image_base/{uid}/{uid}.{image.filename.rsplit(".", 1)[1].lower()}'
-            image.save(image_path)
-            image_path = image_path
+        image_path = data['photo']
+        # if image:
+        #     if not allowed_file(image.filename):
+        #         raise Exception(f'invalid file type, expect:{image_type}')
+        #     if not os.path.exists(f'./cat_image_base/{uid}'):
+        #         os.mkdir(f'./cat_image_base/{uid}')
+        #     image_path = f'./cat_image_base/{uid}/{uid}.{image.filename.rsplit(".", 1)[1].lower()}'
+        #     image.save(image_path)
+        #     image_path = image_path
 
-        photo_album_list = request.files.getlist('photo_album[]')
-        if photo_album_list:
-            if not os.path.exists(f'./cat_image_base/{uid}/photo_album'):
-                os.mkdir(f'./cat_image_base/{uid}/photo_album')
-            for i, photo in enumerate(photo_album_list):
-                if not allowed_file(photo.filename):
-                    raise Exception(f'invalid file type, expect:{image_type}')
-                photo_album_path = f'./cat_image_base/{uid}/photo_album/{uid}_{i}.{photo.filename.rsplit(".", 1)[1].lower()}'
-                photo.save(photo_album_path)
+        photo_album = data['photo_album'].split(',')
+        # if photo_album_list:
+        #     if not os.path.exists(f'./cat_image_base/{uid}/photo_album'):
+        #         os.mkdir(f'./cat_image_base/{uid}/photo_album')
+        #     for i, photo in enumerate(photo_album_list):
+        #         if not allowed_file(photo.filename):
+        #             raise Exception(f'invalid file type, expect:{image_type}')
+        #         photo_album_path = f'./cat_image_base/{uid}/photo_album/{uid}_{i}.{photo.filename.rsplit(".", 1)[1].lower()}'
+        #         photo.save(photo_album_path)
 
         insert_data = CatTable(
             uid=str(uid),
@@ -139,7 +134,8 @@ def create_cat():
             personality=data['personality'],
             cat_status=data['cat_status'],
             is_adapted=data.get('is_adapted', False),
-            adapted_date=data.get('adapted_date', None)
+            adapted_date=data.get('adapted_date', None),
+            photo_album=photo_album
         ).to_dict()
 
         dao = MongoDB()
@@ -190,25 +186,25 @@ def update_cat():
         if data.get('sex_type', None) not in type_sex:
             raise Exception(f'invalid sex_type input, expect:{type_sex}')
 
-        image_path = None
-        image = request.files.get('photo', None)
-        if image:
-            if not allowed_file(image.filename):
-                raise Exception(f'invalid file type, expect:{image_type}')
-            if not os.path.exists(f'./cat_image_base/{uid}'):
-                os.mkdir(f'./cat_image_base/{uid}')
-            image_path = f'./cat_image_base/{uid}/{uid}.{image.filename.rsplit(".", 1)[1].lower()}'
-            image.save(image_path)
+        image_path = data['photo']
+        # image = request.files.get('photo', None)
+        # if image:
+        #     if not allowed_file(image.filename):
+        #         raise Exception(f'invalid file type, expect:{image_type}')
+        #     if not os.path.exists(f'./cat_image_base/{uid}'):
+        #         os.mkdir(f'./cat_image_base/{uid}')
+        #     image_path = f'./cat_image_base/{uid}/{uid}.{image.filename.rsplit(".", 1)[1].lower()}'
+        #     image.save(image_path)
 
-        photo_album_list = request.files.getlist('photo_album[]')
-        if photo_album_list:
-            if not os.path.exists(f'./cat_image_base/{uid}/photo_album'):
-                os.mkdir(f'./cat_image_base/{uid}/photo_album')
-            for i, photo in enumerate(photo_album_list):
-                if not allowed_file(photo.filename):
-                    raise Exception(f'invalid file type, expect:{image_type}')
-                photo_album_path = f'./cat_image_base/{uid}/photo_album/{uid}_{i}.{photo.filename.rsplit(".", 1)[1].lower()}'
-                photo.save(photo_album_path)
+        photo_album = data['photo_album']
+        # if photo_album_list:
+        #     if not os.path.exists(f'./cat_image_base/{uid}/photo_album'):
+        #         os.mkdir(f'./cat_image_base/{uid}/photo_album')
+        #     for i, photo in enumerate(photo_album_list):
+        #         if not allowed_file(photo.filename):
+        #             raise Exception(f'invalid file type, expect:{image_type}')
+        #         photo_album_path = f'./cat_image_base/{uid}/photo_album/{uid}_{i}.{photo.filename.rsplit(".", 1)[1].lower()}'
+        #         photo.save(photo_album_path)
 
         insert_data = CatTable(
             uid=str(uid),
@@ -223,7 +219,8 @@ def update_cat():
             personality=data['personality'],
             cat_status=data['cat_status'],
             is_adapted=data.get('is_adapted', False),
-            adapted_date=data.get('adapted_date', None)
+            adapted_date=data.get('adapted_date', None),
+            photo_album=photo_album
         ).to_dict()
         query_data = {
             "_id", uid
