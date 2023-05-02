@@ -3,7 +3,7 @@ import pymongo
 
 class MongoDB:
     def __init__(self):
-        self.db_handler = pymongo.MongoClient('mongodb://localhost:27017')['cat_db']['cat']
+        self.db_handler = pymongo.MongoClient('mongodb+srv://royee13028:a301047718451@cluster0.uggn4gr.mongodb.net/?retryWrites=true&w=majority')['cat_db']['cat']
 
     def insert(self, data):
         result = self.db_handler.insert_one(data)
