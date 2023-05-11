@@ -202,7 +202,7 @@ def update_cat():
             }
         }
         query_data = {
-            "name", name
+            "name": name
         }
         dao = MongoDB()
         dao.update(query_data, new_data)
