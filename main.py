@@ -174,17 +174,6 @@ def update_cat():
     try:
         data = request.form
         name = data['name']
-        if data.get('status_type', None) not in type_status:
-            raise Exception(f'invalid status_type input, expect:{type_status}')
-
-        if data.get('age_type', None) not in type_age:
-            raise Exception(f'invalid age_type input, expect:{type_age}')
-
-        if data.get('close_type', None) not in type_close:
-            raise Exception(f'invalid close_type input, expect:{type_close}')
-
-        if data.get('sex_type', None) not in type_sex:
-            raise Exception(f'invalid sex_type input, expect:{type_sex}')
 
         image_path = data['photo']
         # image = request.files.get('photo', None)
