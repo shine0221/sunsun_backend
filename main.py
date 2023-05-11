@@ -173,7 +173,7 @@ def update_cat():
     rtn = RtnMessage()
     try:
         data = request.form
-        uid = data['uid']
+        name = data['name']
         if data.get('status_type', None) not in type_status:
             raise Exception(f'invalid status_type input, expect:{type_status}')
 
@@ -196,7 +196,7 @@ def update_cat():
         #     image_path = f'./cat_image_base/{uid}/{uid}.{image.filename.rsplit(".", 1)[1].lower()}'
         #     image.save(image_path)
 
-        photo_album = data['photo_album']
+        photo_album = data['photo_album'].split(',')
         # if photo_album_list:
         #     if not os.path.exists(f'./cat_image_base/{uid}/photo_album'):
         #         os.mkdir(f'./cat_image_base/{uid}/photo_album')
@@ -206,27 +206,17 @@ def update_cat():
         #         photo_album_path = f'./cat_image_base/{uid}/photo_album/{uid}_{i}.{photo.filename.rsplit(".", 1)[1].lower()}'
         #         photo.save(photo_album_path)
 
-        insert_data = CatTable(
-            uid=str(uid),
-            name=data['name'],
-            sex_type=data['sex_type'],
-            age=data['age'],
-            des=data['des'],
-            photo=image_path,
-            age_type=data['age_type'],
-            close_type=data['close_type'],
-            status_type=data['status_type'],
-            personality=data['personality'],
-            cat_status=data['cat_status'],
-            is_adapted=data.get('is_adapted', False),
-            adapted_date=data.get('adapted_date', None),
-            photo_album=photo_album
-        ).to_dict()
+        new_data = {
+            "$set": {
+                "photo": image_path,
+                "photo_album": photo_album
+            }
+        }
         query_data = {
-            "_id", uid
+            "name", name
         }
         dao = MongoDB()
-        dao.update(query_data, insert_data)
+        dao.update(query_data, new_data)
 
     except Exception as e:
         rtn.state = False
